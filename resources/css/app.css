@@ -34,3 +34,21 @@
 
   --shadow-floating: 0 8px 24px -4px rgba(22, 25, 29, 0.14);
 }
+
+@layer base {
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-ink-primary);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  *:focus-visible {
+    outline: 2px solid #16191D;
+    outline-offset: 2px;
+  }
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
