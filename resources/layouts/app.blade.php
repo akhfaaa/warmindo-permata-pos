@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,6 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
+
 <body
     x-data="{
         isOnline: navigator.onLine,
@@ -19,8 +21,7 @@
             window.addEventListener('offline', () => this.isOnline = false);
         }
     }"
-    class="min-h-screen bg-canvas text-ink-primary flex flex-col lg:flex-row"
->
+    class="min-h-screen bg-canvas text-ink-primary flex flex-col lg:flex-row">
     <!-- Desktop Left Sidebar (min-width: 1024px) -->
     <aside class="hidden lg:flex lg:flex-col lg:w-60 lg:fixed lg:inset-y-0 bg-surface border-r border-border z-30">
         <div class="h-14 px-5 flex items-center justify-between border-b border-border">
@@ -32,20 +33,30 @@
 
         <nav aria-label="Navigasi Utama" class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
             <a href="{{ route('pos.index') }}"
-               class="flex items-center gap-3 px-3.5 h-11 rounded-control text-sm font-semibold transition-colors {{ request()->routeIs('pos.*') ? 'bg-brand-tint text-brand-primary' : 'text-ink-secondary hover:bg-subtle hover:text-ink-primary' }}">
+                class="flex items-center gap-3 px-3.5 h-11 rounded-control text-sm font-semibold transition-colors {{ request()->routeIs('pos.*') ? 'bg-brand-tint text-brand-primary' : 'text-ink-secondary hover:bg-subtle hover:text-ink-primary' }}">
                 <span>Kasir (POS)</span>
             </a>
 
+             <a href="{{ route('transactions.index') }}"
+                class="flex items-center gap-3 px-3.5 h-11 rounded-control text-sm font-semibold transition-colors {{ request()->routeIs('transactions.*') ? 'bg-brand-tint text-brand-primary' : 'text-ink-secondary hover:bg-subtle hover:text-ink-primary' }}">
+                <span>Riwayat Nota</span>
+            </a>
+
+            <a href="{{ route('shifts.index') }}"
+                class="flex items-center gap-3 px-3.5 h-11 rounded-control text-sm font-semibold transition-colors {{ request()->routeIs('shifts.*') ? 'bg-brand-tint text-brand-primary' : 'text-ink-secondary hover:bg-subtle hover:text-ink-primary' }}">
+                <span>Tutup Kasir</span>
+            </a>
+
             <a href="{{ route('inventory.index') }}"
-               class="flex items-center gap-3 px-3.5 h-11 rounded-control text-sm font-semibold transition-colors {{ request()->routeIs('inventory.*') ? 'bg-brand-tint text-brand-primary' : 'text-ink-secondary hover:bg-subtle hover:text-ink-primary' }}">
+                class="flex items-center gap-3 px-3.5 h-11 rounded-control text-sm font-semibold transition-colors {{ request()->routeIs('inventory.*') ? 'bg-brand-tint text-brand-primary' : 'text-ink-secondary hover:bg-subtle hover:text-ink-primary' }}">
                 <span>Stok & Restock</span>
             </a>
 
             @if (auth()->user()->isOwner())
-                <a href="{{ route('catalog.index') }}"
-                   class="flex items-center gap-3 px-3.5 h-11 rounded-control text-sm font-semibold transition-colors {{ request()->routeIs('catalog.*') ? 'bg-brand-tint text-brand-primary' : 'text-ink-secondary hover:bg-subtle hover:text-ink-primary' }}">
-                    <span>Menu & Resep</span>
-                </a>
+            <a href="{{ route('catalog.index') }}"
+                class="flex items-center gap-3 px-3.5 h-11 rounded-control text-sm font-semibold transition-colors {{ request()->routeIs('catalog.*') ? 'bg-brand-tint text-brand-primary' : 'text-ink-secondary hover:bg-subtle hover:text-ink-primary' }}">
+                <span>Menu & Resep</span>
+            </a>
             @endif
         </nav>
 
@@ -81,8 +92,7 @@
                 <span
                     :class="isOnline ? 'bg-semantic-successBg text-semantic-successText' : 'bg-semantic-warningBg text-semantic-warningText'"
                     class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold"
-                    role="status"
-                >
+                    role="status">
                     <span :class="isOnline ? 'bg-semantic-successText' : 'bg-semantic-warningText'" class="w-2 h-2 rounded-full"></span>
                     <span x-text="isOnline ? 'Online' : ('Offline • ' + pendingSyncCount + ' Antrean')"></span>
                 </span>
@@ -99,19 +109,19 @@
 
         <!-- Flash Notifications -->
         @if (session('success'))
-            <div role="status" class="mx-4 lg:mx-6 mt-4 p-3.5 rounded-control bg-semantic-successBg text-semantic-successText text-sm font-semibold flex items-center justify-between">
-                <span>{{ session('success') }}</span>
-            </div>
+        <div role="status" class="mx-4 lg:mx-6 mt-4 p-3.5 rounded-control bg-semantic-successBg text-semantic-successText text-sm font-semibold flex items-center justify-between">
+            <span>{{ session('success') }}</span>
+        </div>
         @endif
 
         @if ($errors->any())
-            <div role="alert" class="mx-4 lg:mx-6 mt-4 p-3.5 rounded-control bg-semantic-dangerBg text-semantic-dangerText text-sm font-semibold">
-                <ul class="list-disc list-inside space-y-0.5">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
+        <div role="alert" class="mx-4 lg:mx-6 mt-4 p-3.5 rounded-control bg-semantic-dangerBg text-semantic-dangerText text-sm font-semibold">
+            <ul class="list-disc list-inside space-y-0.5">
+                @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
         @endif
 
         <!-- Page Content -->
@@ -121,21 +131,30 @@
     </div>
 
     <!-- Mobile Bottom Navigation Bar (< 1024px) -->
-    <nav aria-label="Navigasi Bawah" class="lg:hidden fixed bottom-0 inset-x-0 h-15 bg-surface border-t border-border z-30 grid {{ auth()->user()->isOwner() ? 'grid-cols-3' : 'grid-cols-2' }}">
+    <nav aria-label="Navigasi Bawah" class="lg:hidden fixed bottom-0 inset-x-0 h-15 bg-surface border-t border-border z-30 grid {{ auth()->user()->isOwner() ? 'grid-cols-5' : 'grid-cols-4' }}">
         <a href="{{ route('pos.index') }}"
-           class="flex flex-col items-center justify-center text-xs font-semibold {{ request()->routeIs('pos.*') ? 'text-brand-primary bg-brand-tint/50' : 'text-ink-secondary' }}">
+            class="flex flex-col items-center justify-center text-xs font-semibold {{ request()->routeIs('pos.*') ? 'text-brand-primary bg-brand-tint/50' : 'text-ink-secondary' }}">
             <span>Kasir</span>
         </a>
+        <a href="{{ route('transactions.index') }}"
+            class="flex flex-col items-center justify-center text-xs font-semibold {{ request()->routeIs('transactions.*') ? 'text-brand-primary bg-brand-tint/50' : 'text-ink-secondary' }}">
+            <span>Riwayat Nota</span>
+        </a>
+        <a href="{{ route('shifts.index') }}"
+            class="flex flex-col items-center justify-center text-xs font-semibold {{ request()->routeIs('shifts.*') ? 'text-brand-primary bg-brand-tint/50' : 'text-ink-secondary' }}">
+            <span>Tutup Kasir</span>
+        </a>
         <a href="{{ route('inventory.index') }}"
-           class="flex flex-col items-center justify-center text-xs font-semibold {{ request()->routeIs('inventory.*') ? 'text-brand-primary bg-brand-tint/50' : 'text-ink-secondary' }}">
+            class="flex flex-col items-center justify-center text-xs font-semibold {{ request()->routeIs('inventory.*') ? 'text-brand-primary bg-brand-tint/50' : 'text-ink-secondary' }}">
             <span>Stok</span>
         </a>
         @if (auth()->user()->isOwner())
-            <a href="{{ route('catalog.index') }}"
-               class="flex flex-col items-center justify-center text-xs font-semibold {{ request()->routeIs('catalog.*') ? 'text-brand-primary bg-brand-tint/50' : 'text-ink-secondary' }}">
-                <span>Menu & Resep</span>
-            </a>
+        <a href="{{ route('catalog.index') }}"
+            class="flex flex-col items-center justify-center text-xs font-semibold {{ request()->routeIs('catalog.*') ? 'text-brand-primary bg-brand-tint/50' : 'text-ink-secondary' }}">
+            <span>Menu & Resep</span>
+        </a>
         @endif
     </nav>
 </body>
+
 </html>

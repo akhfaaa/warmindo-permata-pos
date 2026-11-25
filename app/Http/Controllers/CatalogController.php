@@ -83,7 +83,6 @@ class CatalogController extends Controller
                 ProductRecipe::where('modifier_id', $validated['target_id'])->delete();
             }
 
-            // Gabungkan jika bahan yang sama dipilih lebih dari sekali
             $merged = [];
             foreach ($validated['items'] ?? [] as $row) {
                 $ingId = $row['ingredient_id'];

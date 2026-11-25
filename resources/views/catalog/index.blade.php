@@ -12,7 +12,7 @@
         recipeDrawer: false,
         recipeTarget: { type: 'product', id: '', name: '', price: 0 },
         recipeRows: [],
-        ingredientsMaster: @js($ingredients->mapWithKeys(fn($i) => [$i->id => ['name' => $i->name, 'unit' => $i->unit, 'cost' => (float)$i->avg_cost_per_unit]])),
+        ingredientsMaster: {{ Js::from($ingredients->mapWithKeys(fn($i) => [$i->id => ['name' => $i->name, 'unit' => $i->unit, 'cost' => (float)$i->avg_cost_per_unit]])) }},
         openRecipeEditor(type, id, name, price, existingRecipes) {
             this.recipeTarget = { type, id, name, price: parseFloat(price) };
             this.recipeRows = existingRecipes.length
@@ -111,7 +111,7 @@
                             <td class="py-3.5 px-4 text-right whitespace-nowrap">
                                 <button
                                     type="button"
-                                    @click='openRecipeEditor("product", @json($product->id), @json($product->name), @json($product->price), @json($product->recipes))'
+                                    @click='openRecipeEditor("product", {{ Js::from($product->id) }}, {{ Js::from($product->name) }}, {{ Js::from($product->price) }}, {{ Js::from($product->recipes) }})'
                                     class="px-3 py-1.5 rounded-badge bg-brand-tint text-brand-primary hover:bg-brand-primary hover:text-white text-xs font-semibold transition-colors cursor-pointer"
                                 >
                                     Atur Resep
@@ -153,7 +153,7 @@
                             <td class="py-3.5 px-4 text-right whitespace-nowrap">
                                 <button
                                     type="button"
-                                    @click='openRecipeEditor("modifier", @json($mod->id), @json($mod->name), @json($mod->price), @json($mod->recipes))'
+                                    @click='openRecipeEditor("modifier", {{ Js::from($mod->id) }}, {{ Js::from($mod->name) }}, {{ Js::from($mod->price) }}, {{ Js::from($mod->recipes) }})'
                                     class="px-3 py-1.5 rounded-badge bg-brand-tint text-brand-primary hover:bg-brand-primary hover:text-white text-xs font-semibold transition-colors cursor-pointer"
                                 >
                                     Atur Resep

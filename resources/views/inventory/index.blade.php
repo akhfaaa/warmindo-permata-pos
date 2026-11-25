@@ -111,7 +111,7 @@
                                 <td class="py-3.5 px-4 text-right space-x-1.5 whitespace-nowrap">
                                     <button
                                         type="button"
-                                        @click='openRestock(@json(["id" => $item->id, "name" => $item->name, "unit" => $item->unit, "current_stock" => $item->current_stock]))'
+                                        @click='openRestock({{ Js::from(["id" => $item->id, "name" => $item->name, "unit" => $item->unit, "current_stock" => $item->current_stock]) }})'
                                         class="px-3 py-1.5 rounded-badge bg-brand-tint text-brand-primary hover:bg-brand-primary hover:text-white text-xs font-semibold transition-colors cursor-pointer"
                                     >
                                         + Restock
@@ -119,7 +119,7 @@
                                     @if (auth()->user()->isOwner())
                                         <button
                                             type="button"
-                                            @click='openOpname(@json(["id" => $item->id, "name" => $item->name, "unit" => $item->unit, "current_stock" => $item->current_stock]))'
+                                            @click='openOpname({{ Js::from(["id" => $item->id, "name" => $item->name, "unit" => $item->unit, "current_stock" => $item->current_stock]) }})'
                                             class="px-3 py-1.5 rounded-badge border border-border-strong text-ink-secondary hover:text-ink-primary text-xs font-semibold cursor-pointer"
                                         >
                                             Opname
