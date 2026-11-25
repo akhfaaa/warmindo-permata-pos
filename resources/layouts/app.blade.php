@@ -16,9 +16,23 @@
     x-data="{
         isOnline: navigator.onLine,
         pendingSyncCount: 0,
+        printerConnected: false,
+        printerName: localStorage.getItem('warmindo_printer_name') || '',
+        syncToast: '',
         init() {
             window.addEventListener('online', () => this.isOnline = true);
             window.addEventListener('offline', () => this.isOnline = false);
+            window.addEventListener('warmindo:sync-updated', (e) => {
+                this.pendingSyncCount = e.detail.count;
+            });
+            window.addEventListener('warmindo:printer-updated', (e) => {
+                this.printerConnected = e.detail.connected;
+                this.printerName = e.detail.name;
+            });
+            window.addEventListener('warmindo:sync-completed', (e) => {
+                this.syncToast = e.detail.syncedCount + ' transaksi offline berhasil disinkronkan ke server.';
+                setTimeout(() => this.syncToast = '', 4000);
+            });
         }
     }"
     class="min-h-screen bg-canvas text-ink-primary flex flex-col lg:flex-row">
@@ -37,7 +51,7 @@
                 <span>Kasir (POS)</span>
             </a>
 
-             <a href="{{ route('transactions.index') }}"
+            <a href="{{ route('transactions.index') }}"
                 class="flex items-center gap-3 px-3.5 h-11 rounded-control text-sm font-semibold transition-colors {{ request()->routeIs('transactions.*') ? 'bg-brand-tint text-brand-primary' : 'text-ink-secondary hover:bg-subtle hover:text-ink-primary' }}">
                 <span>Riwayat Nota</span>
             </a>

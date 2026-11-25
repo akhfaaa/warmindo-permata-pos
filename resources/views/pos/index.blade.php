@@ -438,13 +438,22 @@
     </div>
 
     <!-- MODAL 3: Struk Sukses Transaksi -->
+   <!-- MODAL 3: Struk Sukses Transaksi + Cetak Bluetooth -->
     <div x-show="receiptModal.open" x-cloak class="fixed inset-0 z-50 bg-ink-primary/60 flex items-center justify-center p-4">
         <div class="w-full max-w-sm bg-surface border border-border rounded-modal shadow-floating p-6 space-y-4">
-            <div class="p-3 rounded-control bg-semantic-successBg text-semantic-successText text-center">
-                <p class="text-sm font-bold">Transaksi Berhasil Disimpan</p>
+            <div
+                :class="receiptModal.isOffline ? 'bg-semantic-warningBg text-semantic-warningText' : 'bg-semantic-successBg text-semantic-successText'"
+                class="p-3 rounded-control text-center"
+            >
+                <p class="text-sm font-bold" x-text="receiptModal.isOffline ? 'Tersimpan Offline (Menunggu Sync)' : 'Transaksi Berhasil Disimpan'"></p>
                 <p x-show="receiptModal.data?.payment_method === 'TUNAI'" class="font-mono text-lg font-bold mt-0.5">
                     Kembalian: <span x-text="formatRp(receiptModal.data?.change_amount || 0)"></span>
                 </p>
+            </div>
+
+            <!-- Alert Gagal Cetak Printer (Edge Case #2: Tidak menduplikasi transaksi) -->
+            <div x-show="receiptModal.printError" role="alert" class="p-3 rounded-control bg-semantic-dangerBg text-semantic-dangerText text-xs font-semibold">
+                <p x-text="receiptModal.printError"></p>
             </div>
 
             <!-- Pratinjau Struk Thermal -->
@@ -484,12 +493,22 @@
                 </div>
             </div>
 
-            <button
-                type="button"
-                @click="receiptModal.open = false"
-                class="w-full h-12 rounded-control bg-brand-primary hover:bg-brand-hover text-white font-bold text-sm cursor-pointer">
-                Transaksi Berikutnya (Selesai)
-            </button>
+            <div class="grid grid-cols-2 gap-2">
+                <button
+                    type="button"
+                    @click="reprintThermal()"
+                    class="h-12 rounded-control border border-border-strong bg-subtle hover:bg-border text-ink-primary font-bold text-xs cursor-pointer"
+                >
+                    Cetak Struk Bluetooth
+                </button>
+                <button
+                    type="button"
+                    @click="receiptModal.open = false"
+                    class="h-12 rounded-control bg-brand-primary hover:bg-brand-hover text-white font-bold text-xs cursor-pointer"
+                >
+                    Transaksi Berikutnya
+                </button>
+            </div>
         </div>
     </div>
 </div>
