@@ -2,24 +2,33 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class TransactionItem extends Model
 {
-    use HasUuids;
-
     protected $fillable = [
-        'transaction_id', 'product_id', 'quantity', 'unit_price',
-        'modifiers_json', 'item_hpp_snapshot', 'notes',
+        'transaction_id',
+        'product_id',
+        'quantity',
+        'unit_price',
+        'modifiers_json',
+        'item_hpp_snapshot',
+        'notes',
     ];
+
     protected $casts = [
-        'unit_price' => 'decimal:2',
         'modifiers_json' => 'array',
+        'unit_price' => 'decimal:2',
         'item_hpp_snapshot' => 'decimal:2',
     ];
 
-    public function product()
+    public function transaction(): BelongsTo
+    {
+        return $this->belongsTo(Transaction::class);
+    }
+
+    public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
     }

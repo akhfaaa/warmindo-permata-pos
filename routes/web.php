@@ -4,8 +4,10 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\PosController;
+use App\Http\Controllers\PrinterSettingController;
 use App\Http\Controllers\ShiftController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn () => redirect()->route('pos.index'));
@@ -30,9 +32,16 @@ Route::middleware(['auth', 'role:OWNER,KASIR'])->group(function () {
     // Inventori & Restock
     Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
     Route::post('/inventory/restock', [InventoryController::class, 'restock'])->name('inventory.restock');
+
+    // Pengaturan Printer Thermal & Monitor Sync Offline
+    Route::get('/settings/printer', [PrinterSettingController::class, 'index'])->name('settings.printer');
 });
 
 Route::middleware(['auth', 'role:OWNER'])->group(function () {
+    // Dashboard Laporan Omzet & Laba Kotor (Owner Only)
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+    Route::get('/dashboard/export', [DashboardController::class, 'exportCsv'])->name('dashboard.export');
+
     // Void Transaksi (Owner Only)
     Route::post('/transactions/{transaction}/void', [TransactionController::class, 'void'])->name('transactions.void');
 
