@@ -10,7 +10,7 @@ class AuthController extends Controller
     public function showLogin()
     {
         if (Auth::check()) {
-            return redirect()->route('pos.index');
+            return redirect()->route(Auth::user()->defaultRouteName());
         }
 
         return view('auth.login');
@@ -23,15 +23,27 @@ class AuthController extends Controller
             'password' => ['required', 'string'],
         ]);
 
-        if (Auth::attempt(['username' => $credentials['username'], 'password' => $credentials['password'], 'is_active' => true], true)) {
-            $request->session()->regenerate();
+        if (Auth::attempt(['username' => $credentials['username'], 'password' => $credentials['password']])) {
+            $user = Auth::user();
 
-            return redirect()->intended(route('pos.index'));
+            if (\Illuminate\Support\Facades\Schema::hasColumn('users', 'is_active') && ! $request->user()->is_active) {
+                \Illuminate\Support\Facades\Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+
+                return back()->withErrors([
+                    'username' => 'Akun Anda telah dinonaktifkan. Hubungi Administrator.',
+                    'email'    => 'Akun Anda telah dinonaktifkan. Hubungi Administrator.',
+                ]);
+            }
+
+            $request->session()->regenerate();
+            return redirect()->intended(route($user->defaultRouteName()));
         }
 
-        return back()
-            ->withErrors(['username' => 'Username atau kata sandi salah, atau akun dinonaktifkan.'])
-            ->onlyInput('username');
+        return back()->withErrors([
+            'username' => 'Username atau password salah.',
+        ])->onlyInput('username');
     }
 
     public function logout(Request $request)

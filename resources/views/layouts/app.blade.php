@@ -42,57 +42,88 @@
         <div class="h-14 px-5 flex items-center justify-between border-b border-border">
             <div>
                 <span class="font-bold text-base tracking-tight text-ink-primary block leading-none">Warmindo Permata</span>
-                <span class="text-[11px] font-semibold text-ink-muted uppercase tracking-wider">{{ auth()->user()->role }}</span>
+                <span class="text-[11px] font-semibold text-ink-muted uppercase tracking-wider">{{ auth()->user()->roleLabel() }}</span>
             </div>
         </div>
 
         <nav aria-label="Navigasi Utama" class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-            @if (auth()->user()->isOwner())
+            @if (auth()->user()->hasMenu('dashboard'))
             <a href="{{ route('dashboard.index') }}"
                 class="flex items-center justify-between px-3.5 h-11 rounded-control text-sm font-semibold transition-colors {{ request()->routeIs('dashboard.*') ? 'bg-brand-tint text-brand-primary' : 'text-ink-secondary hover:bg-subtle hover:text-ink-primary' }}">
                 <span>Dashboard</span>
             </a>
             @endif
 
+            @if (auth()->user()->hasMenu('pos'))
             <a href="{{ route('pos.index') }}"
                 class="flex items-center justify-between px-3.5 h-11 rounded-control text-sm font-semibold transition-colors {{ request()->routeIs('pos.*') ? 'bg-brand-tint text-brand-primary' : 'text-ink-secondary hover:bg-subtle hover:text-ink-primary' }}">
                 <span>Kasir (POS)</span>
             </a>
+            @endif
 
+            @if (auth()->user()->hasMenu('transactions'))
             <a href="{{ route('transactions.index') }}"
                 class="flex items-center justify-between px-3.5 h-11 rounded-control text-sm font-semibold transition-colors {{ request()->routeIs('transactions.*') ? 'bg-brand-tint text-brand-primary' : 'text-ink-secondary hover:bg-subtle hover:text-ink-primary' }}">
                 <span>Riwayat Nota</span>
             </a>
+            @endif
 
+            @if (auth()->user()->hasMenu('shifts'))
             <a href="{{ route('shifts.index') }}"
                 class="flex items-center justify-between px-3.5 h-11 rounded-control text-sm font-semibold transition-colors {{ request()->routeIs('shifts.*') ? 'bg-brand-tint text-brand-primary' : 'text-ink-secondary hover:bg-subtle hover:text-ink-primary' }}">
                 <span>Tutup Kasir</span>
             </a>
+            @endif
 
+            @if (auth()->user()->hasMenu('inventory'))
             <a href="{{ route('inventory.index') }}"
                 class="flex items-center justify-between px-3.5 h-11 rounded-control text-sm font-semibold transition-colors {{ request()->routeIs('inventory.*') ? 'bg-brand-tint text-brand-primary' : 'text-ink-secondary hover:bg-subtle hover:text-ink-primary' }}">
                 <span>Stok & Restock</span>
             </a>
+            @endif
 
-            @if (auth()->user()->isOwner())
+            @if (auth()->user()->hasMenu('recap'))
+            <a href="{{ route('recap.index') }}"
+                class="flex items-center justify-between px-3.5 h-11 rounded-control text-sm font-semibold transition-colors {{ request()->routeIs('recap.*') ? 'bg-brand-tint text-brand-primary' : 'text-ink-secondary hover:bg-subtle hover:text-ink-primary' }}">
+                <span>Rekap Penjualan</span>
+            </a>
+            @endif
+
+            @if (auth()->user()->hasMenu('reports'))
+            <a href="{{ route('reports.index') }}"
+                class="flex items-center justify-between px-3.5 h-11 rounded-control text-sm font-semibold transition-colors {{ request()->routeIs('reports.*') ? 'bg-brand-tint text-brand-primary' : 'text-ink-secondary hover:bg-subtle hover:text-ink-primary' }}">
+                <span>Pusat Laporan</span>
+            </a>
+            @endif
+
+            @if (auth()->user()->hasMenu('catalog'))
             <a href="{{ route('catalog.index') }}"
                 class="flex items-center justify-between px-3.5 h-11 rounded-control text-sm font-semibold transition-colors {{ request()->routeIs('catalog.*') ? 'bg-brand-tint text-brand-primary' : 'text-ink-secondary hover:bg-subtle hover:text-ink-primary' }}">
                 <span>Menu & Resep</span>
             </a>
             @endif
 
+            @if (auth()->user()->hasMenu('printer'))
             <a href="{{ route('settings.printer') }}"
                 class="flex items-center justify-between px-3.5 h-11 rounded-control text-sm font-semibold transition-colors {{ request()->routeIs('settings.*') ? 'bg-brand-tint text-brand-primary' : 'text-ink-secondary hover:bg-subtle hover:text-ink-primary' }}">
                 <span>Printer & Sync</span>
                 <span x-show="pendingSyncCount > 0" x-cloak x-text="pendingSyncCount"
                     class="px-2 py-0.5 rounded-full font-mono text-[11px] font-bold bg-semantic-warningBg text-semantic-warningText"></span>
             </a>
+            @endif
+
+            @if (auth()->user()->hasMenu('users'))
+            <a href="{{ route('users.index') }}"
+                class="flex items-center justify-between px-3.5 h-11 rounded-control text-sm font-semibold transition-colors {{ request()->routeIs('users.*') ? 'bg-brand-tint text-brand-primary' : 'text-ink-secondary hover:bg-subtle hover:text-ink-primary' }}">
+                <span>Manajemen User</span>
+            </a>
+            @endif
         </nav>
 
         <div class="p-3 border-t border-border">
             <div class="px-3 py-2 mb-2 rounded-control bg-subtle">
                 <p class="text-xs font-semibold text-ink-primary truncate">{{ auth()->user()->name }}</p>
-                <p class="text-[11px] text-ink-secondary font-mono">{{ auth()->user()->username }}</p>
+                <p class="text-[11px] text-ink-secondary font-mono">{{ auth()->user()->username }} • {{ auth()->user()->roleLabel() }}</p>
             </div>
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
@@ -109,7 +140,7 @@
         <header class="sticky top-0 z-20 h-13 bg-surface border-b border-border px-4 lg:px-6 flex items-center justify-between gap-3">
             <div class="flex items-center gap-2 lg:hidden">
                 <span class="font-bold text-sm text-ink-primary">Warmindo Permata</span>
-                <span class="px-1.5 py-0.5 text-[10px] font-bold rounded-badge bg-subtle text-ink-secondary">{{ auth()->user()->role }}</span>
+                <span class="px-1.5 py-0.5 text-[10px] font-bold rounded-badge bg-subtle text-ink-secondary">{{ auth()->user()->roleLabel() }}</span>
             </div>
 
             <div class="hidden lg:block">
@@ -117,13 +148,14 @@
             </div>
 
             <div class="flex items-center gap-2">
-                <!-- Printer Status Pill -->
+                @if (auth()->user()->hasMenu('printer'))
                 <a href="{{ route('settings.printer') }}"
                     :class="printerConnected ? 'bg-semantic-successBg text-semantic-successText' : 'bg-subtle text-ink-secondary hover:text-ink-primary'"
                     class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold transition-colors">
                     <span :class="printerConnected ? 'bg-semantic-successText' : 'bg-ink-muted'" class="w-2 h-2 rounded-full"></span>
                     <span x-text="printerConnected ? ('Printer: ' + printerName) : 'Printer'"></span>
                 </a>
+                @endif
 
                 <!-- Connection & Sync Status Pill -->
                 <span
@@ -173,35 +205,49 @@
     </div>
 
     <!-- Mobile Bottom Navigation Bar (< 1024px) -->
-    <nav aria-label="Navigasi Bawah" class="lg:hidden fixed bottom-0 inset-x-0 h-15 bg-surface border-t border-border z-30 grid {{ auth()->user()->isOwner() ? 'grid-cols-6' : 'grid-cols-5' }}">
+    <nav aria-label="Navigasi Bawah" class="lg:hidden fixed bottom-0 inset-x-0 h-15 bg-surface border-t border-border z-30 flex items-stretch overflow-x-auto">
+        @if (auth()->user()->hasMenu('dashboard'))
+        <a href="{{ route('dashboard.index') }}"
+            class="flex-1 min-w-[60px] flex flex-col items-center justify-center text-[11px] font-semibold {{ request()->routeIs('dashboard.*') ? 'text-brand-primary bg-brand-tint/50' : 'text-ink-secondary' }}">
+            <span>Dashboard</span>
+        </a>
+        @endif
+        @if (auth()->user()->hasMenu('pos'))
         <a href="{{ route('pos.index') }}"
-            class="flex flex-col items-center justify-center text-[11px] font-semibold {{ request()->routeIs('pos.*') ? 'text-brand-primary bg-brand-tint/50' : 'text-ink-secondary' }}">
+            class="flex-1 min-w-[60px] flex flex-col items-center justify-center text-[11px] font-semibold {{ request()->routeIs('pos.*') ? 'text-brand-primary bg-brand-tint/50' : 'text-ink-secondary' }}">
             <span>Kasir</span>
         </a>
+        @endif
+        @if (auth()->user()->hasMenu('transactions'))
         <a href="{{ route('transactions.index') }}"
-            class="flex flex-col items-center justify-center text-[11px] font-semibold {{ request()->routeIs('transactions.*') ? 'text-brand-primary bg-brand-tint/50' : 'text-ink-secondary' }}">
+            class="flex-1 min-w-[60px] flex flex-col items-center justify-center text-[11px] font-semibold {{ request()->routeIs('transactions.*') ? 'text-brand-primary bg-brand-tint/50' : 'text-ink-secondary' }}">
             <span>Nota</span>
         </a>
+        @endif
+        @if (auth()->user()->hasMenu('shifts'))
         <a href="{{ route('shifts.index') }}"
-            class="flex flex-col items-center justify-center text-[11px] font-semibold {{ request()->routeIs('shifts.*') ? 'text-brand-primary bg-brand-tint/50' : 'text-ink-secondary' }}">
+            class="flex-1 min-w-[60px] flex flex-col items-center justify-center text-[11px] font-semibold {{ request()->routeIs('shifts.*') ? 'text-brand-primary bg-brand-tint/50' : 'text-ink-secondary' }}">
             <span>Shift</span>
         </a>
+        @endif
+        @if (auth()->user()->hasMenu('inventory'))
         <a href="{{ route('inventory.index') }}"
-            class="flex flex-col items-center justify-center text-[11px] font-semibold {{ request()->routeIs('inventory.*') ? 'text-brand-primary bg-brand-tint/50' : 'text-ink-secondary' }}">
+            class="flex-1 min-w-[60px] flex flex-col items-center justify-center text-[11px] font-semibold {{ request()->routeIs('inventory.*') ? 'text-brand-primary bg-brand-tint/50' : 'text-ink-secondary' }}">
             <span>Stok</span>
         </a>
-        @if (auth()->user()->isOwner())
+        @endif
+        @if (auth()->user()->hasMenu('catalog'))
         <a href="{{ route('catalog.index') }}"
-            class="flex flex-col items-center justify-center text-[11px] font-semibold {{ request()->routeIs('catalog.*') ? 'text-brand-primary bg-brand-tint/50' : 'text-ink-secondary' }}">
+            class="flex-1 min-w-[60px] flex flex-col items-center justify-center text-[11px] font-semibold {{ request()->routeIs('catalog.*') ? 'text-brand-primary bg-brand-tint/50' : 'text-ink-secondary' }}">
             <span>Resep</span>
         </a>
         @endif
-        <a href="{{ route('settings.printer') }}"
-            class="relative flex flex-col items-center justify-center text-[11px] font-semibold {{ request()->routeIs('settings.*') ? 'text-brand-primary bg-brand-tint/50' : 'text-ink-secondary' }}">
-            <span>Printer</span>
-            <span x-show="pendingSyncCount > 0" x-cloak x-text="pendingSyncCount"
-                class="absolute top-1.5 right-2 px-1.5 rounded-full font-mono text-[10px] font-bold bg-semantic-warningBg text-semantic-warningText"></span>
+        @if (auth()->user()->hasMenu('users'))
+        <a href="{{ route('users.index') }}"
+            class="flex-1 min-w-[60px] flex flex-col items-center justify-center text-[11px] font-semibold {{ request()->routeIs('users.*') ? 'text-brand-primary bg-brand-tint/50' : 'text-ink-secondary' }}">
+            <span>Users</span>
         </a>
+        @endif
     </nav>
 </body>
 
